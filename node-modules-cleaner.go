@@ -36,7 +36,7 @@ type Config struct {
 	ExportPath  string
 }
 
-// Format bytes to human-readable size
+// Format bytes to readable size
 func formatSize(size int64) string {
 	const (
 		KB = 1 << 10
@@ -103,8 +103,6 @@ func dirSize(root string) Result {
 			return nil
 		}
 		if d.IsDir() {
-			res.Dirs++
-			// Get modification time for the root directory
 			if path == root {
 				if info, err := d.Info(); err == nil {
 					res.ModTime = info.ModTime()
