@@ -1,0 +1,94 @@
+[
+  // ============================================
+  // GLOBAL VIM NORMAL MODE BINDINGS
+  // (EmptyPane || SharedScreen) || (Editor && vim_mode == normal) || (VimControl && !menu)
+  // ============================================
+  {
+    "context": "(EmptyPane || SharedScreen) || (Editor && vim_mode == normal) || (VimControl && !menu)",
+    "bindings": {
+      "space p": "file_finder::Toggle",
+      "space r": "projects::OpenRecent",
+      // "space s p" -> Settings Profile Selector
+      "space s p": "settings_profile_selector::Toggle",
+    },
+  },
+
+  // ============================================
+  // EDITOR VIM NORMAL MODE BINDINGS (Hover)
+  // Editor && vim_mode == normal && !VimWaiting && !menu
+  // ============================================
+  {
+    "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
+    "bindings": {
+      "space e": "editor::Hover",
+    },
+  },
+
+  // ============================================
+  // EDITOR VIM NORMAL MODE BINDINGS
+  // Editor && vim_mode == normal
+  // ============================================
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      // --- PANE MANAGEMENT ---
+      // "g h" -> Go to Definition in Horizontal Split
+      "g h": ["workspace::SendKeystrokes", "ctrl-w s g d"],
+      // "g v" -> Go to Definition in Vertical Split
+      "g v": ["workspace::SendKeystrokes", "ctrl-w g d"],
+      // "s" -> Send Ctrl-W (Vim window command prefix)
+      "s": ["workspace::SendKeystrokes", "ctrl-w"],
+
+      // Shift Focus
+      "s h": "workspace::ActivatePaneLeft",
+      "s j": "workspace::ActivatePaneDown",
+      "s k": "workspace::ActivatePaneUp",
+      "s l": "workspace::ActivatePaneRight",
+
+      "s s": "pane::SplitDown",
+      "s v": "pane::SplitRight",
+
+      // --- EDITOR ACTIONS ---
+      // "space /" -> Global Search (Find in Files)
+      "space /": "pane::DeploySearch",
+      "space a": "pane::CloseAllItems",
+      "space f": "editor::Format",
+      "space n": "workspace::ToggleRightDock",
+      "space o": "pane::CloseOtherItems",
+      "space t": "workspace::ToggleBottomDock",
+      "space w": "pane::CloseActiveItem",
+    },
+  },
+
+  // ============================================
+  // WORKSPACE BINDINGS
+  // Workspace
+  // ============================================
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-b": "workspace::ToggleLeftDock",
+      "ctrl-b": "workspace::ToggleRightDock",
+      "ctrl-j": "terminal_panel::ToggleFocus",
+      "ctrl-r": "projects::OpenRecent",
+      "ctrl-shift-a": "agent::ToggleFocus",
+      "ctrl-shift-[": "project_panel::CollapseAllEntries",
+      "ctrl-shift-e": "project_panel::ToggleFocus",
+    },
+  },
+
+  // ============================================
+  // EDITOR BINDINGS
+  // Editor
+  // ============================================
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-z": "editor::ToggleSoftWrap",
+      "ctrl-e": "project_symbols::Toggle",
+      "ctrl-j": "terminal_panel::ToggleFocus",
+      "ctrl-r": "projects::OpenRecent",
+      "ctrl-shift-a": "agent::ToggleFocus",
+    },
+  },
+]
