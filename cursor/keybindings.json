@@ -120,26 +120,6 @@
     "command": "editor.action.formatDocument",
     "when": "editorTextFocus && vim.mode == 'Normal'"
   },
-  // {
-  //   "key": "space h",
-  //   "command": "workbench.action.navigateLeft",
-  //   "when": "editorTextFocus && vim.mode == 'Normal'"
-  // },
-  // {
-  //   "key": "space j",
-  //   "command": "workbench.action.navigateDown",
-  //   "when": "editorTextFocus && vim.mode == 'Normal'"
-  // },
-  // {
-  //   "key": "space k",
-  //   "command": "workbench.action.navigateUp",
-  //   "when": "editorTextFocus && vim.mode == 'Normal'"
-  // },
-  // {
-  //   "key": "space l",
-  //   "command": "workbench.action.navigateRight",
-  //   "when": "editorTextFocus && vim.mode == 'Normal'"
-  // },
   {
     "key": "space n",
     "command": "workbench.action.toggleSidebarVisibility",
