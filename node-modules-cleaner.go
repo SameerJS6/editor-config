@@ -126,7 +126,7 @@ func dirSize(root string) Result {
 
 func findNodeModules(root string) ([]string, error) {
 	var nodeModules []string
-	
+
 	err := filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return nil
@@ -137,13 +137,16 @@ func findNodeModules(root string) ([]string, error) {
 		}
 		return nil
 	})
-	
+
 	return nodeModules, err
 }
 
 func scanNodeModules(nodeModules []string) []Result {
 	numWorkers := runtime.NumCPU()
-	jobs := make(chan struct{ path string; index int }, len(nodeModules))
+	jobs := make(chan struct {
+		path  string
+		index int
+	}, len(nodeModules))
 	results := make(chan Result, len(nodeModules))
 	var wg sync.WaitGroup
 	var processed int32
@@ -174,7 +177,10 @@ func scanNodeModules(nodeModules []string) []Result {
 	}
 
 	for i, dir := range nodeModules {
-		jobs <- struct{ path string; index int }{path: dir, index: i}
+		jobs <- struct {
+			path  string
+			index int
+		}{path: dir, index: i}
 	}
 	close(jobs)
 
@@ -259,17 +265,147 @@ func exportResults(results []Result, exportPath string) error {
 	return nil
 }
 
+// removeFile deletes a file, handling Windows read-only attributes
+func removeFile(path string) error {
+	// On Windows, try to remove read-only attribute first
+	if runtime.GOOS == "windows" {
+		// Try to make file writable before deletion
+		info, err := os.Lstat(path)
+		if err == nil && info.Mode()&0200 == 0 {
+			// File is read-only, make it writable
+			os.Chmod(path, 0666)
+		}
+	}
+	return os.Remove(path)
+}
+
+// fastDeleteDir deletes a directory tree using parallel file deletion
+// This is significantly faster than os.RemoveAll for large directories
+func fastDeleteDir(root string) error {
+	// Collect directories for later deletion (deepest first)
+	var dirs []string
+	var dirsMu sync.Mutex
+
+	// Use more aggressive parallelism for file deletion
+	numWorkers := runtime.NumCPU() * 4 // More workers for I/O-bound operations
+	if numWorkers > 64 {
+		numWorkers = 64 // Cap at 64 workers
+	}
+
+	// Much larger buffer to handle 100k+ files without blocking
+	fileJobs := make(chan string, 10000)
+	var wg sync.WaitGroup
+	var deleteErr error
+	var deleteErrMu sync.Mutex
+	var deletedCount int64
+
+	// Start worker goroutines for file deletion
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for filePath := range fileJobs {
+				if err := removeFile(filePath); err != nil {
+					// Don't fail on individual file errors, just track first one
+					deleteErrMu.Lock()
+					if deleteErr == nil {
+						deleteErr = err
+					}
+					deleteErrMu.Unlock()
+				} else {
+					atomic.AddInt64(&deletedCount, 1)
+				}
+			}
+		}()
+	}
+
+	// Walk directory and delete files as we find them
+	// Use a separate goroutine to feed files to workers to avoid blocking
+	var walkErr error
+	walkDone := make(chan struct{})
+	go func() {
+		defer close(walkDone)
+		walkErr = filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
+			if err != nil {
+				return nil // Skip errors, continue deletion
+			}
+
+			if d.IsDir() {
+				dirsMu.Lock()
+				dirs = append(dirs, path)
+				dirsMu.Unlock()
+			} else {
+				// Send file to deletion workers (non-blocking with large buffer)
+				fileJobs <- path
+			}
+			return nil
+		})
+	}()
+
+	// Wait for walk to complete, then close channel
+	<-walkDone
+	close(fileJobs)
+	wg.Wait()
+
+	if walkErr != nil {
+		return walkErr
+	}
+
+	// Delete directories in parallel (reverse order - deepest first)
+	// Use parallel workers for directory deletion too
+	if len(dirs) > 0 {
+		dirJobs := make(chan string, len(dirs))
+		var dirWg sync.WaitGroup
+		dirWorkers := runtime.NumCPU()
+		if dirWorkers > 16 {
+			dirWorkers = 16
+		}
+
+		for i := 0; i < dirWorkers; i++ {
+			dirWg.Add(1)
+			go func() {
+				defer dirWg.Done()
+				for dirPath := range dirJobs {
+					// On Windows, try to remove read-only attribute first
+					if runtime.GOOS == "windows" {
+						info, err := os.Lstat(dirPath)
+						if err == nil && info.Mode()&0200 == 0 {
+							os.Chmod(dirPath, 0777)
+						}
+					}
+					os.Remove(dirPath) // Ignore errors for directories
+				}
+			}()
+		}
+
+		// Send directories in reverse order (deepest first)
+		for i := len(dirs) - 1; i >= 0; i-- {
+			dirJobs <- dirs[i]
+		}
+		close(dirJobs)
+		dirWg.Wait()
+	}
+
+	return deleteErr // Return first file deletion error if any
+}
+
 func deleteNodeModules(path string, dryRun bool) error {
 	if dryRun {
 		fmt.Printf("🔍 [DRY RUN] Would delete: %s\n", path)
 		return nil
 	}
-	
+
 	fmt.Printf("🗑️  Deleting: %s\n", path)
-	err := os.RemoveAll(path)
+	err := fastDeleteDir(path)
 	if err != nil {
-		fmt.Printf("❌ Error deleting %s: %v\n", path, err)
-		return err
+		// Fallback to standard RemoveAll if fast deletion fails
+		// This handles edge cases like permission issues or locked files
+		fmt.Printf("⚠️  Fast deletion had issues, trying standard method for: %s\n", path)
+		err = os.RemoveAll(path)
+		if err != nil {
+			fmt.Printf("❌ Error deleting %s: %v\n", path, err)
+			return err
+		}
 	}
 	fmt.Printf("✅ Deleted: %s\n", path)
 	return nil
@@ -433,7 +569,7 @@ func printSummary(results []Result) {
 
 func main() {
 	var config Config
-	
+
 	flag.StringVar(&config.Root, "dir", ".", "Directory to scan (default: current directory)")
 	flag.BoolVar(&config.DryRun, "dry-run", false, "Show what would be deleted without actually deleting")
 	flag.BoolVar(&config.AutoYes, "y", false, "Automatically answer yes to prompts (use with caution!)")
@@ -443,7 +579,7 @@ func main() {
 	flag.IntVar(&config.OlderThan, "older-than", 0, "Only process directories older than X days")
 	flag.BoolVar(&config.Interactive, "interactive", false, "Interactive mode - let user choose which directories to delete")
 	flag.StringVar(&config.ExportPath, "export", "", "Export results to JSON file")
-	
+
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS]\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Scan, identify, and delete node_modules directories.\n\n")
@@ -458,48 +594,48 @@ func main() {
 		fmt.Fprintf(os.Stderr, "  %s --interactive                            # Choose which dirs to delete\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s --export results.json --scan             # Export results to JSON\n", os.Args[0])
 	}
-	
+
 	flag.Parse()
-	
+
 	start := time.Now()
-	
+
 	absPath, err := filepath.Abs(config.Root)
 	if err != nil {
 		fmt.Printf("❌ Error resolving path: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	info, err := os.Stat(absPath)
 	if err != nil {
 		fmt.Printf("❌ Error accessing directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	if !info.IsDir() {
 		fmt.Printf("❌ Error: %s is not a directory\n", absPath)
 		os.Exit(1)
 	}
-	
+
 	config.Root = absPath
-	
+
 	fmt.Printf("🚀 Scanning for node_modules in: %s\n", config.Root)
 	fmt.Println()
-	
+
 	fmt.Println("🔍 Searching for node_modules directories...")
 	nodeModules, err := findNodeModules(config.Root)
 	if err != nil {
 		fmt.Printf("❌ Error scanning directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	if len(nodeModules) == 0 {
 		fmt.Println("✨ No node_modules directories found!")
 		return
 	}
-	
+
 	fmt.Printf("📊 Found %d node_modules directories\n", len(nodeModules))
 	fmt.Println("📏 Calculating sizes (this may take a moment)...")
-	
+
 	results := scanNodeModules(nodeModules)
 
 	// Apply filters if specified
@@ -535,17 +671,17 @@ func main() {
 			return
 		}
 	}
-	
+
 	if config.DryRun {
 		fmt.Println("\n🔍 DRY RUN MODE - No files will be deleted")
 	}
-	
+
 	fmt.Println()
-	
+
 	deleteStart := time.Now()
 	deleted, failed := deleteAllNodeModules(results, config.DryRun)
 	deleteDuration := time.Since(deleteStart)
-	
+
 	fmt.Println("\n" + strings.Repeat("=", 80))
 	if config.DryRun {
 		fmt.Printf("🔍 DRY RUN SUMMARY:\n")
