@@ -1,0 +1,310 @@
+{
+  // ============================================
+  // CURSOR-SPECIFIC SETTINGS
+  // ============================================
+  "cursor.composer.queueMessageDefaultBehavior": "queue",
+  "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "cursor.composer.usageSummaryDisplay": "always",
+  // ============================================
+  // EDITOR SETTINGS
+  // ============================================
+  "editor.codeLens": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.detectIndentation": false,
+  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontSize": 13,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.guides.bracketPairs": true,
+  "editor.lineNumbers": "relative",
+  "editor.linkedEditing": true,
+  "editor.mouseWheelZoom": true,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.stickyScroll.enabled": true,
+  "editor.tabSize": 2,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  // ============================================
+  // EDITOR LANGUAGE-SPECIFIC SETTINGS
+  // ============================================
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp"
+  },
+  "[dockercompose]": {
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[mdx]": {
+    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
+  },
+  "[powershell]": {
+    "editor.defaultFormatter": "ms-vscode.powershell"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  // ============================================
+  // WORKBENCH SETTINGS
+  // ============================================
+  "workbench.colorCustomizations": {
+    "errorLens.errorBackground": "#281f16",
+    "errorLens.errorForeground": "#ff8c00",
+    "errorLens.hintForeground": "#ffd580",
+    "errorLens.infoForeground": "#ffb347",
+    "errorLens.opacity": 1,
+    "errorLens.warningForeground": "#ffa500"
+  },
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.externalBrowser": "chrome",
+  "workbench.iconTheme": "moxer-icons-fork",
+  "workbench.sideBar.location": "right",
+  "workbench.startupEditor": "none",
+  // ============================================
+  // FILE & WORKSPACE SETTINGS
+  // ============================================
+  "explorer.fileNesting.patterns": {
+    "*.db": "${capture}.${extname}-*",
+    "*.db3": "${capture}.${extname}-*",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.s3db": "${capture}.${extname}-*",
+    "*.sdb": "${capture}.${extname}-*",
+    "*.sqlite": "${capture}.${extname}-*",
+    "*.sqlite3": "${capture}.${extname}-*",
+    "*.ts": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+    "tsconfig.json": "tsconfig.*.json"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "security.workspace.trust.untrustedFiles": "open",
+  // ============================================
+  // GIT SETTINGS
+  // ============================================
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "githubPullRequests.pullBranch": "never",
+  "githubPullRequests.remotes": [
+    "origin",
+    "upstream"
+  ],
+  // ============================================
+  // TERMINAL SETTINGS
+  // ============================================
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  // ============================================
+  // REMOTE DEVELOPMENT SETTINGS
+  // ============================================
+  "remote.portsAttributes": {
+    "3000": {
+      "protocol": "https"
+    }
+  },
+  // ============================================
+  // LANGUAGE & TOOLING SETTINGS
+  // ============================================
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // ============================================
+  // EXTENSION: BIOME
+  // ============================================
+  "biome.requireConfiguration": true,
+  // ============================================
+  // EXTENSION: BUILDER
+  // ============================================
+  "builder.command": "npm run dev",
+  "builder.openInBrowser": false,
+  "builder.serverUrl": "http://localhost:8080/",
+  // ============================================
+  // EXTENSION: CUSTOM UI STYLE
+  // ============================================
+  "custom-ui-style.font.sansSerif": "JetBrains Mono",
+  "custom-ui-style.stylesheet": {
+    ".editor-widget.find-widget": "box-shadow: none;",
+    ".notification-toast": "box-shadow: none !important",
+    ".quick-input-list .scrollbar": "display: none",
+    ".quick-input-widget.show-file-icons": "box-shadow: none !important"
+  },
+  // ============================================
+  // EXTENSION: ERROR LENS
+  // ============================================
+  "errorLens.gutterIconSize": "90%",
+  "errorLens.searchForProblemQuery": "https://google.com/?q=$message",
+  // ============================================
+  // EXTENSION: LIVE SERVER
+  // ============================================
+  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.donotVerifyTags": true,
+  "liveServer.settings.useLocalIp": true,
+  // ============================================
+  // EXTENSION: MATERIAL ICON THEME
+  // ============================================
+  "material-icon-theme.activeIconPack": "react",
+  // ============================================
+  // EXTENSION: PRETTIER
+  // ============================================
+  "prettier.requireConfig": true,
+  // ============================================
+  // EXTENSION: RED HAT
+  // ============================================
+  "redhat.telemetry.enabled": false,
+  // ============================================
+  // EXTENSION: SVELTE
+  // ============================================
+  "svelte.enable-ts-plugin": true,
+  // ============================================
+  // EXTENSION: TAILWIND CSS
+  // ============================================
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "class:list",
+    "ngClass",
+    "wrapperClassName"
+  ],
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "html"
+  },
+  // ============================================
+  // VIM SETTINGS
+  // ============================================
+  "vim.hlsearch": true,
+  "vim.leader": "<space>",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // "g c" -> Comment Line
+    {
+      "before": [
+        "g",
+        "c"
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ]
+    },
+    // "g c c" -> Comment Line (Normal Mode)
+    {
+      "before": [
+        "g",
+        "c",
+        "c"
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ]
+    },
+    // "g h" -> Open Definition Below (Horizontal)
+    {
+      "before": [
+        "g",
+        "h"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown",
+        "editor.action.revealDefinition"
+      ]
+    },
+    // "g v" -> Open Definition to the Side (Vertical)
+    {
+      "before": [
+        "g",
+        "v"
+      ],
+      "commands": [
+        "editor.action.revealDefinitionAside"
+      ]
+    },
+    // "s h" -> Focus Left
+    {
+      "before": [
+        "s",
+        "h"
+      ],
+      "commands": [
+        "workbench.action.navigateLeft"
+      ]
+    },
+    // "s j" -> Focus Down
+    {
+      "before": [
+        "s",
+        "j"
+      ],
+      "commands": [
+        "workbench.action.navigateDown"
+      ]
+    },
+    // "s k" -> Focus Up
+    {
+      "before": [
+        "s",
+        "k"
+      ],
+      "commands": [
+        "workbench.action.navigateUp"
+      ]
+    },
+    // "s l" -> Focus Right
+    {
+      "before": [
+        "s",
+        "l"
+      ],
+      "commands": [
+        "workbench.action.navigateRight"
+      ]
+    },
+    // "s s" -> Split Down (Horizontal)
+    {
+      "before": [
+        "s",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown"
+      ]
+    },
+    // "s v" -> Split Right (Vertical)
+    {
+      "before": [
+        "s",
+        "v"
+      ],
+      "commands": [
+        "workbench.action.splitEditor"
+      ]
+    }
+  ],
+  "vim.useSystemClipboard": true
+}
