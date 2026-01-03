@@ -1,0 +1,114 @@
+{
+  "colorize_brackets": true,
+  "audio": {
+    "experimental.auto_microphone_volume": true,
+    "experimental.rodio_audio": true,
+  },
+  "formatter": "prettier",
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "context_servers": {
+    "shadcn": {
+      "enabled": true,
+      "settings": {},
+    },
+    "context7": {
+      "enabled": true,
+      "settings": {},
+    },
+    "mcp-server-context7": {
+      "settings": {
+        "default_minimum_tokens": "10000",
+      },
+    },
+  },
+  "agent": {
+    "dock": "left",
+    "play_sound_when_agent_done": true,
+    "default_width": 450,
+    "model_parameters": [],
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "grok-code-fast-1",
+    },
+  },
+  "relative_line_numbers": "enabled",
+  "auto_update_extensions": {
+    "powershell": true,
+  },
+  "edit_predictions": {
+    "disabled_globs": [],
+    "mode": "eager",
+    "copilot": {
+      "proxy": null,
+      "proxy_no_verify": null,
+    },
+  },
+  "scrollbar": { "show": "auto" },
+  "project_panel": {
+    "dock": "right",
+    "default_width": 300,
+  },
+  "minimap": { "show": "never" },
+  "features": {
+    "edit_prediction_provider": "zed",
+  },
+  "format_on_save": "on",
+  "icon_theme": "Zed (Default)",
+  "restore_on_startup": "last_workspace",
+  "vim_mode": true,
+  "ui_font_size": 13,
+  "buffer_font_size": 13,
+  "terminal": {
+    "shell": {
+      "program": "C:\\Program Files\\Git\\bin\\bash.exe",
+    },
+    "font_size": 13,
+  },
+  "lsp": {
+    "biome": {
+      "settings": {
+        "require_config_file": true,
+      },
+    },
+    "vscode-css-language-server": {
+      "settings": {
+        "css": {
+          "lint": {
+            "unknownAtRules": "ignore",
+          },
+        },
+      },
+    },
+  },
+  "theme": "Min Dark (Solid)",
+  "theme_overrides": {
+    "Min Dark (Solid)": {
+      "error": "#F97583",
+      "error.background": "#47181C",
+      "error.border": "#F97583",
+      "warning": "#FFE62A",
+      "warning.background": "#55450E",
+      "warning.border": "#FFE62A",
+      "panel.overlay_background": "#141414",
+    },
+    "Min Light (Solid)": {
+      "warning": "#FFE62A",
+      "warning.background": "#FFFDE7",
+      "warning.border": "#FFE62A",
+      "panel.overlay_background": "#fbfbfb",
+    },
+  },
+  "command_aliases": {
+    "W": "w",
+    "Q": "q",
+  },
+  "profiles": {
+    "recording": {
+      "buffer_font_size": 16,
+      "theme": "T3 Theme",
+    },
+  },
+}
